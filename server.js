@@ -5,6 +5,7 @@ const { json } = require('body-parser');
 const app = express();
 const userRoutes = require('./routes/users');
 const prodRoutes = require('./routes/products');
+const { MONGO_URI } = require('./constants');
 
 app.use(json({ extended: true }));
 app.use((req, res, next) => {
@@ -20,15 +21,12 @@ app.use('/bambora-shop/products', prodRoutes);
 app.use((req, res) => res.status(404).json({ error: 'Page not Found!' }));
 
 mongoose
-  .connect(
-    'mongodb+srv://admin-suranjan:admin-suranjan@cluster0.hzfia.mongodb.net/bambora-shop?retryWrites=true&w=majority',
-    {
-      useNewUrlParser: true,
-      useUnifiedTopology: true,
-      useFindAndModify: false,
-      useCreateIndex: true,
-    }
-  )
+  .connect(MONGO_URI, {
+    useNewUrlParser: true,
+    useUnifiedTopology: true,
+    useFindAndModify: false,
+    useCreateIndex: true,
+  })
   .then(() => {
     console.log('Connected to the database!');
     app.listen(5000, () => {
