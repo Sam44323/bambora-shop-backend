@@ -7,6 +7,12 @@ const userRoutes = require('./routes/users');
 const prodRoutes = require('./routes/products');
 
 app.use(json({ extended: true }));
+app.use((req, res, next) => {
+  res.setHeader('Access-Control-Allow-Origin', '*');
+  res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization');
+  res.setHeader('Access-Control-Allow-Methods', 'GET, POST, PATCH, DELETE');
+  next();
+});
 
 app.use('/bambora-shop/users', userRoutes);
 app.use('/bambora-shop/products', prodRoutes);

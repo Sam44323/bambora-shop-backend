@@ -27,7 +27,8 @@ const addProd = (req, res, next) => {
     name: req.body.name,
     image: req.body.image,
     amount: req.body.amount,
-    creator: 'creator 1',
+    description: req.body.desc,
+    creatorId: 'creator 1',
   });
   prod
     .save()

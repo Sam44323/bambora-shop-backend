@@ -4,6 +4,7 @@ const prodSchema = new Schema({
   name: String,
   amount: Number,
   image: String,
+  description: String,
   creatorId: String,
 });
 
