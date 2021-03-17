@@ -1,13 +1,18 @@
+const bcrypt = require('bcrypt');
+
 const User = require('../models/users');
 
 const addUser = (req, res, next) => {
-  const userObj = new User({
-    name: req.body.email,
-    email: req.body.email,
-    password: req.body.password,
-  });
-  userObj
-    .save()
+  bcrypt
+    .hash(req.body.password, 12)
+    .then((password) => {
+      const userObj = new User({
+        name: req.body.name,
+        email: req.body.email,
+        password: password,
+      });
+      return userObj.save();
+    })
     .then(() => res.status(200).json({ message: 'Added an user!' }))
     .catch((err) => console.log(err));
 };
@@ -28,7 +33,22 @@ const deleteUser = (req, res, next) => {
 };
 
 const loginUser = (req, res, next) => {
-  res.status(200).json({ message: 'You are logged in!' });
+  User.findOne({ email: req.body.email })
+    .then((user) => {
+      if (!user) {
+        res.status(404).json({ message: 'User not found!' });
+      }
+      return bcrypt.compare(req.body.password, user.password);
+    })
+    .then((isValid) => {
+      if (!isValid) {
+        return res
+          .status(404)
+          .json({ message: 'Please enter a valid password!' });
+      }
+      res.status(200).json({ message: 'You are logged in!' });
+    })
+    .catch((err) => console.log(err));
 };
 
 const cartAction = (req, res, next) => {
