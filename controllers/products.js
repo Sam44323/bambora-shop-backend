@@ -11,6 +11,14 @@ const getProds = (req, res, next) => {
     .catch((err) => console.log(err));
 };
 
+const getAdminProds = (req, res, next) => {
+  Products.find({ creatorId: req.params.id })
+    .then((prods) => {
+      res.status(200).json({ products: prods });
+    })
+    .catch((err) => console.log(err));
+};
+
 const getProd = (req, res, next) => {
   Products.findById(req.params.id)
     .then((prod) => {
@@ -59,6 +67,7 @@ const deleteProd = (req, res, next) => {
 
 module.exports = {
   getProds,
+  getAdminProds,
   getProd,
   addProd,
   updateProd,

@@ -6,6 +6,10 @@ const prodControllers = require('../controllers/products');
 //GETTING ALL PRODS
 router.get('/get-prods', prodControllers.getProds);
 
+//GETTING ALL THE PRODUCTS FROM THE LOGGED USER
+//will later refactor by using the local storage
+router.get('/get-adminProds/:id', prodControllers.getAdminProds);
+
 //GETTING A PROD
 router.get('/get-prod/:id', prodControllers.getProd);
 
