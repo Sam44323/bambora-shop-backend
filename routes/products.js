@@ -23,7 +23,7 @@ router.post(
     body('amount')
       .isFloat({ min: 1 })
       .withMessage('Please enter a valid amount!'),
-    body('description')
+    body('desc')
       .isLength({ min: 30 })
       .withMessage('Please describe the product properly!'),
   ],
@@ -39,7 +39,7 @@ router.patch(
     body('amount')
       .isFloat({ min: 1 })
       .withMessage('Please enter a valid amount!'),
-    body('description')
+    body('desc')
       .isLength({ min: 30 })
       .withMessage('Please describe the product properly!'),
   ],
