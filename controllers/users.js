@@ -1,4 +1,5 @@
 const bcrypt = require('bcrypt');
+const jwt = require('jsonwebtoken');
 
 const User = require('../models/users');
 
@@ -33,6 +34,7 @@ const deleteUser = (req, res, next) => {
 };
 
 const loginUser = (req, res, next) => {
+  // work on the jsonwebtoken logic for tokenizing the user
   User.findOne({ email: req.body.email })
     .then((user) => {
       if (!user) {
