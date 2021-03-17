@@ -35,11 +35,13 @@ const deleteUser = (req, res, next) => {
 
 const loginUser = (req, res, next) => {
   // work on the jsonwebtoken logic for tokenizing the user
+  let userData;
   User.findOne({ email: req.body.email })
     .then((user) => {
       if (!user) {
         res.status(404).json({ message: 'User not found!' });
       }
+      userData = user;
       return bcrypt.compare(req.body.password, user.password);
     })
     .then((isValid) => {
@@ -48,7 +50,18 @@ const loginUser = (req, res, next) => {
           .status(404)
           .json({ message: 'Please enter a valid password!' });
       }
-      res.status(200).json({ message: 'You are logged in!' });
+      const token = jwt.sign(
+        {
+          email: userData.email,
+          userId: userData._id,
+          password: userData.password,
+        },
+        'BAMBORA-SHOP-SECRET',
+        {
+          expiresIn: '1h',
+        }
+      );
+      res.status(200).json({ token, userId: userData._id.toString() });
     })
     .catch((err) => console.log(err));
 };
