@@ -1,3 +1,4 @@
+const { validationResult } = require('express-validator');
 const Products = require('../models/products');
 
 const getProds = (req, res, next) => {
@@ -31,6 +32,10 @@ const getProd = (req, res, next) => {
 };
 
 const addProd = (req, res, next) => {
+  const errors = validationResult(req);
+  if (!errors.isEmpty()) {
+    return res.status(404).json({ message: errors.errors[0].msg });
+  }
   const prod = new Products({
     name: req.body.name,
     image: req.body.image,
@@ -45,6 +50,10 @@ const addProd = (req, res, next) => {
 };
 
 const updateProd = (req, res, next) => {
+  const errors = validationResult(req);
+  if (!errors.isEmpty()) {
+    return res.status(404).json({ message: errors.errors[0].msg });
+  }
   const updatedProd = {
     name: req.body.name,
     amount: req.body.amount,
