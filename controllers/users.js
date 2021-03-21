@@ -70,6 +70,12 @@ const cartAction = (req, res, next) => {
   res.status(200).json({ message: 'Added to the cart!' });
 };
 
+const getOrders = (req, res, next) => {
+  User.findById(req.params.id).then(user => {
+    res.status(200).orders({orders: user.orders})
+  }).catch(err => console.log(err))
+}
+
 const placeOrder = (req, res, next) => {
   res.status(200).json({ message: 'Placed the order!' });
 };
@@ -80,5 +86,6 @@ module.exports = {
   deleteUser,
   loginUser,
   cartAction,
+  getOrders,
   placeOrder,
 };

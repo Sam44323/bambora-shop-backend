@@ -39,6 +39,9 @@ router.post('/login-user', userControllers.loginUser);
 //CART ACTION
 router.post('/cart-action:id', userControllers.cartAction);
 
+//GETTING THE USER
+router.get('/orders/:id', userControllers.getOrders)
+
 //ORDER HANDLER
 router.post('/order-action/:id', userControllers.placeOrder);
 

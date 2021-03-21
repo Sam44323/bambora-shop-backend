@@ -18,7 +18,7 @@ app.use((req, res, next) => {
 app.use('/bambora-shop/users', userRoutes);
 app.use('/bambora-shop/products', prodRoutes);
 
-app.use((req, res) => res.status(404).json({ error: 'Page not Found!' }));
+app.use((req, res) => res.status(404).json({ errcor: 'Page not Found!' }));
 
 mongoose
   .connect(MONGO_URI, {
