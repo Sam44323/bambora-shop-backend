@@ -40,13 +40,13 @@ router.delete("/delete-user", checkAuthenticated, userControllers.deleteUser);
 router.post("/login-user", userControllers.loginUser);
 
 //GETTING THE CART ITEMS
-router.get("/cart/:id", checkAuthenticated, userControllers.getCart);
+router.get("/cart", checkAuthenticated, userControllers.getCart);
 
 //CART ACTION
-router.post("/cart-action:id", checkAuthenticated, userControllers.cartAction);
+router.post("/cart-action", checkAuthenticated, userControllers.cartAction);
 
 //GETTING THE USER
-router.get("/orders/:id", checkAuthenticated, userControllers.getOrders);
+router.get("/orders", checkAuthenticated, userControllers.getOrders);
 
 //ORDER HANDLER
 router.post(

@@ -74,9 +74,10 @@ const loginUser = (req, res, next) => {
 
 const getCart = (req, res, next) => {
   User.findById(req.userId)
-    .then((user) => {
-      if (user) {
-        res.status(200).json({ cart: user.cart });
+    .select({ cart: 1, _id: 0 })
+    .then((cart) => {
+      if (cart.cart) {
+        res.status(200).json({ cart: cart.cart });
       }
     })
     .catch((err) => {
@@ -90,8 +91,11 @@ const cartAction = (req, res, next) => {
 
 const getOrders = (req, res, next) => {
   User.findById(req.userId)
-    .then((user) => {
-      res.status(200).orders({ orders: user.orders });
+    .select({ orders: 1, _id: 0 })
+    .then((orders) => {
+      if (orders.orders) {
+        res.status(200).orders({ orders: orders.orders });
+      }
     })
     .catch((err) => {
       next(errorCreator("Please try after some time!"));

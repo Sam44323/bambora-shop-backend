@@ -11,7 +11,7 @@ router.get("/get-prods", checkAuthenticated, prodControllers.getProds);
 //GETTING ALL THE PRODUCTS FROM THE LOGGED USER
 //will later refactor by using the local storage
 router.get(
-  "/get-adminProds/:id",
+  "/get-adminProds",
   checkAuthenticated,
   prodControllers.getAdminProds
 );

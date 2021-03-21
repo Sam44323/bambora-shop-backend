@@ -8,6 +8,9 @@ const getProds = (req, res, next) => {
       if (!prods) {
         return next(errorCreator("No Products Found!"));
       }
+      prods = prods.filter(
+        (prod) => prod.creatorId.toString() !== req.userId.toString()
+      );
       res.status(200).json({ products: prods });
     })
     .catch((err) => {
