@@ -1,11 +1,11 @@
 const jwt = require("jsonwebtoken");
-const errorCreator = require("../errorCreator/errorCreator");
+const { errorCreator } = require("../errorCreator/errorCreator");
 
 //FOR AUTHENTICATION PURPOSES
 
 exports.checkAuthenticated = (req, res, next) => {
   if (!req.get("Authorization")) {
-    return next(errorCreator("Unauthenticarted user!", 500));
+    return next(errorCreator("Unauthenticated user!", 500));
   }
 
   const token = req.get("Authorization").split(" ")[1];

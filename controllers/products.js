@@ -1,6 +1,6 @@
 const { validationResult } = require("express-validator");
 const Products = require("../models/products");
-const errorCreator = require("../errorCreator/errorCreator");
+const { errorCreator } = require("../errorCreator/errorCreator");
 
 const getProds = (req, res, next) => {
   Products.find()
@@ -16,7 +16,7 @@ const getProds = (req, res, next) => {
 };
 
 const getAdminProds = (req, res, next) => {
-  Products.find({ creatorId: req.params.id })
+  Products.find({ creatorId: req.userId })
     .then((prods) => {
       if (!prods) {
         return next(errorCreator("Can't get the products this moment!"));
@@ -49,7 +49,7 @@ const addProd = (req, res, next) => {
     image: req.body.image,
     amount: req.body.amount,
     description: req.body.desc,
-    creatorId: "creator 1",
+    creatorId: req.userId,
   });
   prod
     .save()

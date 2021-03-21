@@ -1,6 +1,6 @@
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
-const errorCreator = require("../errorCreator/errorCreator");
+const { errorCreator } = require("../errorCreator/errorCreator");
 
 const User = require("../models/users");
 
@@ -25,7 +25,7 @@ const updateUser = (req, res, next) => {
   const updatedValue = {
     email: req.body.email,
   };
-  User.findByIdAndUpdate(req.params.id, updatedValue)
+  User.findByIdAndUpdate(req.userId, updatedValue)
     .then(() => res.status(201).json({ message: "Updated the user!" }))
     .catch((err) => {
       next(errorCreator("Can't update the user at this moment1"));
@@ -33,7 +33,7 @@ const updateUser = (req, res, next) => {
 };
 
 const deleteUser = (req, res, next) => {
-  User.findByIdAndDelete(req.body.id)
+  User.findByIdAndDelete(req.userId)
     .then(() => res.status(204).json({ message: "Deleted an user!" }))
     .catch((err) => {
       next(errorCreator("Can't delete the user at this moment1"));
@@ -73,7 +73,7 @@ const loginUser = (req, res, next) => {
 };
 
 const getCart = (req, res, next) => {
-  User.findById(req.params.id)
+  User.findById(req.userId)
     .then((user) => {
       if (user) {
         res.status(200).json({ cart: user.cart });
@@ -89,7 +89,7 @@ const cartAction = (req, res, next) => {
 };
 
 const getOrders = (req, res, next) => {
-  User.findById(req.params.id)
+  User.findById(req.userId)
     .then((user) => {
       res.status(200).orders({ orders: user.orders });
     })
