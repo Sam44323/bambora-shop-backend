@@ -36,6 +36,9 @@ router.delete('/delete-user', userControllers.deleteUser);
 // LOGIN THE USER
 router.post('/login-user', userControllers.loginUser);
 
+//GETTING THE CART ITEMS
+router.get('/cart/:id', userControllers.getCart)
+
 //CART ACTION
 router.post('/cart-action:id', userControllers.cartAction);
 

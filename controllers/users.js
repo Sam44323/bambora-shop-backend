@@ -66,6 +66,14 @@ const loginUser = (req, res, next) => {
     .catch((err) => console.log(err));
 };
 
+const getCart = (req, res, next) => {
+  User.findById(req.params.id).then (user => {
+    if(user){
+      res.status(200).json({cart: user.cart })
+    }
+  }).catch(err=> console.log(err))
+}
+
 const cartAction = (req, res, next) => {
   res.status(200).json({ message: 'Added to the cart!' });
 };
@@ -85,6 +93,7 @@ module.exports = {
   updateUser,
   deleteUser,
   loginUser,
+  getCart,
   cartAction,
   getOrders,
   placeOrder,
