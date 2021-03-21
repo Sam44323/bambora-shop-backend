@@ -119,6 +119,8 @@ const cartAction = (req, res, next) => {
     });
 };
 
+//method for removing an item from the cart
+
 const removeFromCart = (req, res, next) => {
   User.findById(req.userId)
     .then((user) => {
