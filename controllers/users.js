@@ -1,4 +1,5 @@
 const bcrypt = require("bcrypt");
+const { ObjectID } = require("mongodb");
 const jwt = require("jsonwebtoken");
 const { errorCreator } = require("../errorCreator/errorCreator");
 
@@ -12,6 +13,7 @@ const addUser = (req, res, next) => {
         name: req.body.name,
         email: req.body.email,
         password: password,
+        cart: [],
       });
       return userObj.save();
     })
@@ -74,6 +76,12 @@ const loginUser = (req, res, next) => {
 
 const getCart = (req, res, next) => {
   User.findById(req.userId)
+    .populate({
+      path: "cart",
+      populate: {
+        path: "prodId",
+      },
+    })
     .select({ cart: 1, _id: 0 })
     .then((cart) => {
       if (cart.cart) {
@@ -81,12 +89,56 @@ const getCart = (req, res, next) => {
       }
     })
     .catch((err) => {
+      console.log(err);
       next(errorCreator("Please try after some time!"));
     });
 };
 
 const cartAction = (req, res, next) => {
-  res.status(200).json({ message: "Added to the cart!" });
+  User.findById(req.userId)
+    .then((user) => {
+      const findIndex = user.cart.findIndex(
+        (item) => item.prodId.toString() === req.params.id
+      );
+
+      if (findIndex >= 0) {
+        user.cart[findIndex].qty += 1;
+      } else {
+        user.cart.push({
+          prodId: ObjectID(req.params.id),
+          qty: 1,
+        });
+      }
+      return user.save();
+    })
+    .then((response) => {
+      res.status(200).json({ message: "Added to cart!" });
+    })
+    .catch((err) => {
+      next(errorCreator("Please try again!"));
+    });
+};
+
+const removeFromCart = (req, res, next) => {
+  User.findById(req.userId)
+    .then((user) => {
+      if (!user) {
+        return next(errorCreator("No such user found1"));
+      }
+
+      user.cart = user.cart.filter(
+        (item) => item._id.toString() !== req.params.id.toString()
+      );
+
+      return user.save();
+    })
+    .then(() => {
+      res.status(200).json({ message: "Removed from cart!" });
+    })
+    .catch((err) => {
+      console.log(err);
+      next(errorCreator("Please try after some time!"));
+    });
 };
 
 const getOrders = (req, res, next) => {
@@ -113,6 +165,7 @@ module.exports = {
   loginUser,
   getCart,
   cartAction,
+  removeFromCart,
   getOrders,
   placeOrder,
 };

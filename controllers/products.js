@@ -8,12 +8,11 @@ const getProds = (req, res, next) => {
       if (!prods) {
         return next(errorCreator("No Products Found!"));
       }
-      prods = prods.filter(
-        (prod) => prod.creatorId.toString() !== req.userId.toString()
-      );
+      prods = prods.filter((prod) => prod.creatorId.toString() !== req.userId);
       res.status(200).json({ products: prods });
     })
     .catch((err) => {
+      console.log(err);
       next(errorCreator("Can't fetch the products at this moment!"));
     });
 };

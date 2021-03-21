@@ -8,7 +8,6 @@ const { checkAuthenticated } = require("../middleware/authMiddleware");
 // ADDING A NEW USER
 router.post(
   "/add-user",
-  checkAuthenticated,
   [
     body("name").notEmpty().withMessage("Please enter your name!"),
     body("email").isEmail().withMessage("Please enter a valid email!"),
@@ -43,7 +42,14 @@ router.post("/login-user", userControllers.loginUser);
 router.get("/cart", checkAuthenticated, userControllers.getCart);
 
 //CART ACTION
-router.post("/cart-action", checkAuthenticated, userControllers.cartAction);
+router.post("/cart-action/:id", checkAuthenticated, userControllers.cartAction);
+
+//REMOVE FROM THE CART
+router.post(
+  "/remove-cartItem/:id",
+  checkAuthenticated,
+  userControllers.removeFromCart
+);
 
 //GETTING THE USER
 router.get("/orders", checkAuthenticated, userControllers.getOrders);
