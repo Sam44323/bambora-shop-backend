@@ -4,4 +4,4 @@ const errorCreator = (message, code = 404) => {
   return error;
 };
 
-export default errorCreator;
+exports.errorCreator;
