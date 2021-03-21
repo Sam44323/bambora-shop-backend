@@ -1,51 +1,58 @@
-const { Router } = require('express');
-const { body } = require('express-validator');
+const { Router } = require("express");
+const { body } = require("express-validator");
 
 const router = Router();
-const userControllers = require('../controllers/users');
+const userControllers = require("../controllers/users");
+const { checkAuthenticated } = require("../middleware/authMiddleware");
 
 // ADDING A NEW USER
 router.post(
-  '/add-user',
+  "/add-user",
+  checkAuthenticated,
   [
-    body('name').notEmpty().withMessage('Please enter your name!'),
-    body('email').isEmail().withMessage('Please enter a valid email!'),
-    body('password')
+    body("name").notEmpty().withMessage("Please enter your name!"),
+    body("email").isEmail().withMessage("Please enter a valid email!"),
+    body("password")
       .isStrongPassword({ minLength: 5 })
-      .withMessage('Please enter a password of at-least 5 character!'),
+      .withMessage("Please enter a password of at-least 5 character!"),
   ],
   userControllers.addUser
 );
 
 //UPDATE AN USER
 router.patch(
-  '/update-user/:id',
+  "/update-user/:id",
+  checkAuthenticated,
   [
-    body('name').notEmpty().withMessage('Please enter your name!'),
-    body('email').isEmail().withMessage('Please enter a valid email!'),
-    body('password')
+    body("name").notEmpty().withMessage("Please enter your name!"),
+    body("email").isEmail().withMessage("Please enter a valid email!"),
+    body("password")
       .isStrongPassword({ minLength: 5 })
-      .withMessage('Please enter a password of at-least 5 character!'),
+      .withMessage("Please enter a password of at-least 5 character!"),
   ],
   userControllers.updateUser
 );
 
 // DELETING A USER
-router.delete('/delete-user', userControllers.deleteUser);
+router.delete("/delete-user", checkAuthenticated, userControllers.deleteUser);
 
 // LOGIN THE USER
-router.post('/login-user', userControllers.loginUser);
+router.post("/login-user", userControllers.loginUser);
 
 //GETTING THE CART ITEMS
-router.get('/cart/:id', userControllers.getCart)
+router.get("/cart/:id", checkAuthenticated, userControllers.getCart);
 
 //CART ACTION
-router.post('/cart-action:id', userControllers.cartAction);
+router.post("/cart-action:id", checkAuthenticated, userControllers.cartAction);
 
 //GETTING THE USER
-router.get('/orders/:id', userControllers.getOrders)
+router.get("/orders/:id", checkAuthenticated, userControllers.getOrders);
 
 //ORDER HANDLER
-router.post('/order-action/:id', userControllers.placeOrder);
+router.post(
+  "/order-action/:id",
+  checkAuthenticated,
+  userControllers.placeOrder
+);
 
 module.exports = router;

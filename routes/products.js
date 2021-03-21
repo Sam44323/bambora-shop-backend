@@ -1,52 +1,63 @@
-const { Router } = require('express');
-const { body } = require('express-validator');
+const { Router } = require("express");
+const { body } = require("express-validator");
 
 const router = Router();
-const prodControllers = require('../controllers/products');
+const prodControllers = require("../controllers/products");
+const { checkAuthenticated } = require("../middleware/authMiddleware");
 
 //GETTING ALL PRODS
-router.get('/get-prods', prodControllers.getProds);
+router.get("/get-prods", checkAuthenticated, prodControllers.getProds);
 
 //GETTING ALL THE PRODUCTS FROM THE LOGGED USER
 //will later refactor by using the local storage
-router.get('/get-adminProds/:id', prodControllers.getAdminProds);
+router.get(
+  "/get-adminProds/:id",
+  checkAuthenticated,
+  prodControllers.getAdminProds
+);
 
 //GETTING A PROD
-router.get('/get-prod/:id', prodControllers.getProd);
+router.get("/get-prod/:id", checkAuthenticated, prodControllers.getProd);
 
 //ADDING A PROD
 router.post(
-  '/add-prod',
+  "/add-prod",
+  checkAuthenticated,
   [
-    body('name').notEmpty().withMessage('Please enter product name!'),
-    body('image').notEmpty().withMessage('Please enter an image!'),
-    body('amount')
+    body("name").notEmpty().withMessage("Please enter product name!"),
+    body("image").notEmpty().withMessage("Please enter an image!"),
+    body("amount")
       .isFloat({ min: 1 })
-      .withMessage('Please enter a valid amount!'),
-    body('desc')
+      .withMessage("Please enter a valid amount!"),
+    body("desc")
       .isLength({ min: 30 })
-      .withMessage('Please describe the product properly!'),
+      .withMessage("Please describe the product properly!"),
   ],
   prodControllers.addProd
 );
 
 //UPDATING A PROD
 router.patch(
-  '/update-prod/:id',
+  "/update-prod/:id",
+  checkAuthenticated,
   [
-    body('name').notEmpty().withMessage('Please enter product name!'),
-    body('image').notEmpty().withMessage('Please enter an image!'),
-    body('amount')
+    body("name").notEmpty().withMessage("Please enter product name!"),
+    body("image").notEmpty().withMessage("Please enter an image!"),
+    body("amount")
       .isFloat({ min: 1 })
-      .withMessage('Please enter a valid amount!'),
-    body('desc')
+      .withMessage("Please enter a valid amount!"),
+    body("desc")
       .isLength({ min: 30 })
-      .withMessage('Please describe the product properly!'),
+      .withMessage("Please describe the product properly!"),
   ],
   prodControllers.updateProd
 );
 
 //DELETING A PROD
-router.delete('/delete-prod/:id', prodControllers.deleteProd);
+router.delete(
+  "/delete-prod/:id",
+  checkAuthenticated,
+  prodControllers.deleteProd
+);
 
 module.exports = router;
