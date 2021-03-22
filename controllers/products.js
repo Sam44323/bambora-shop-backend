@@ -12,7 +12,6 @@ const getProds = (req, res, next) => {
       res.status(200).json({ products: prods });
     })
     .catch((err) => {
-      console.log(err);
       next(errorCreator("Can't fetch the products at this moment!"));
     });
 };
@@ -38,7 +37,7 @@ const getProd = (req, res, next) => {
       }
       res.status(200).json({ product: prod });
     })
-    .catch((err) => console.log(err));
+    .catch((err) => next(errorCreator("Please try again!")));
 };
 
 const addProd = (req, res, next) => {

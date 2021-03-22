@@ -102,7 +102,6 @@ const getCart = (req, res, next) => {
       }
     })
     .catch((err) => {
-      console.log(err);
       next(errorCreator("Please try after some time!"));
     });
 };
@@ -186,7 +185,6 @@ const getOrders = (req, res, next) => {
       }
     })
     .catch((err) => {
-      console.log(err);
       next(errorCreator("Please try after some time!"));
     });
 };
@@ -218,7 +216,6 @@ const getStripeSession = (req, res, next) => {
       res.status(200).json({ session });
     })
     .catch((err) => {
-      console.log(err);
       next(errorCreator("Please try again!"));
     });
 };
@@ -248,7 +245,6 @@ const placeOrder = (req, res, next) => {
       res.status(200).json({ message: "Placed your order!" });
     })
     .catch((err) => {
-      console.log(err);
       next(errorCreator("Can't place your order at this moment!"));
     });
 };
