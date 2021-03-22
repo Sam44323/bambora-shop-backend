@@ -54,14 +54,10 @@ router.post(
 //INCREASE/DECRESASE THE CART ITEM QTY
 router.post("/incr-dcr/:id", checkAuthenticated, userControllers.incDcrCart);
 
+//CHECKOUT ACTION
+router.post("/checkout", checkAuthenticated, userControllers.placeOrder);
+
 //GETTING THE USER
 router.get("/orders", checkAuthenticated, userControllers.getOrders);
-
-//ORDER HANDLER
-router.post(
-  "/order-action/:id",
-  checkAuthenticated,
-  userControllers.placeOrder
-);
 
 module.exports = router;

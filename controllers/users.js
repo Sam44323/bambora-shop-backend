@@ -19,6 +19,7 @@ const addUser = (req, res, next) => {
         email: req.body.email,
         password: password,
         cart: [],
+        orders: [],
       });
       return userObj.save();
     })
@@ -173,6 +174,33 @@ const removeFromCart = (req, res, next) => {
     });
 };
 
+const placeOrder = (req, res, next) => {
+  User.findById(req.userId)
+    .populate({
+      path: "cart",
+      populate: {
+        path: "prodId",
+      },
+    })
+    .then((user) => {
+      const orders = [];
+      for (let item of user.cart) {
+        orders.push({
+          name: item.prodId.name,
+          qty: item.qty,
+          amount: item.prodId.amount * item.qty,
+        });
+      }
+      user.cart = [];
+      user.orders = orders;
+      return user.save();
+    })
+    .then(() => {
+      res.status(200).json({ message: "Placed your order!" });
+    })
+    .catch(() => next(errorCreator("Can't place your order at this moment!")));
+};
+
 const getOrders = (req, res, next) => {
   User.findById(req.userId)
     .select({ orders: 1, _id: 0 })
@@ -187,10 +215,6 @@ const getOrders = (req, res, next) => {
     });
 };
 
-const placeOrder = (req, res, next) => {
-  res.status(200).json({ message: "Placed the order!" });
-};
-
 module.exports = {
   addUser,
   updateUser,
@@ -200,6 +224,6 @@ module.exports = {
   cartAction,
   incDcrCart,
   removeFromCart,
-  getOrders,
   placeOrder,
+  getOrders,
 };

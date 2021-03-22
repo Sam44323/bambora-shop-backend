@@ -16,8 +16,9 @@ const userSchema = new Schema({
   ],
   orders: [
     {
-      type: String,
-      default: [],
+      name: String,
+      qty: Number,
+      amount: Number,
     },
   ],
 });
