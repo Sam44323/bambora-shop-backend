@@ -18,6 +18,13 @@ router.post(
   userControllers.addUser
 );
 
+//FETCHING A STRIPE SESSION
+router.get(
+  "/stripeSession",
+  checkAuthenticated,
+  userControllers.getStripeSession
+);
+
 //UPDATE AN USER
 router.patch(
   "/update-user/:id",

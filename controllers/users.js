@@ -2,6 +2,9 @@ const bcrypt = require("bcrypt");
 const { ObjectID } = require("mongodb");
 const jwt = require("jsonwebtoken");
 const { errorCreator } = require("../errorCreator/errorCreator");
+const stripe = require("stripe")(
+  "sk_test_51IXt1SSGnPbEznxsmliUKLckPLdc1zqgp0Fe85lo7PhPE0OrexgHccIhnXBC3cCHSZPqcx1HZ0SUoeDj1PspyvFa00pjEgMQac"
+);
 
 const User = require("../models/users");
 const { validationResult } = require("express-validator");
@@ -188,6 +191,38 @@ const getOrders = (req, res, next) => {
     });
 };
 
+const getStripeSession = (req, res, next) => {
+  User.findById(req.userId)
+    .populate({
+      path: "cart",
+      populate: {
+        path: "prodId",
+      },
+    })
+    .select({ cart: 1, _id: 0 })
+    .then((cart) => {
+      return stripe.checkout.sessions.create({
+        payment_method_types: ["card"],
+        line_items: cart.cart.map((item) => ({
+          name: item.prodId.name,
+          description: item.prodId.description,
+          amount: item.prodId.amount * 100,
+          currency: "usd",
+          quantity: item.qty,
+        })),
+        success_url: "http://localhost:3000/success",
+        cancel_url: "http://localhost:/failPayment",
+      });
+    })
+    .then((session) => {
+      res.status(200).json({ session });
+    })
+    .catch((err) => {
+      console.log(err);
+      next(errorCreator("Please try again!"));
+    });
+};
+
 const placeOrder = (req, res, next) => {
   User.findById(req.userId)
     .populate({
@@ -212,13 +247,17 @@ const placeOrder = (req, res, next) => {
     .then(() => {
       res.status(200).json({ message: "Placed your order!" });
     })
-    .catch(() => next(errorCreator("Can't place your order at this moment!")));
+    .catch((err) => {
+      console.log(err);
+      next(errorCreator("Can't place your order at this moment!"));
+    });
 };
 
 module.exports = {
   addUser,
   updateUser,
   deleteUser,
+  getStripeSession,
   loginUser,
   getCart,
   cartAction,
