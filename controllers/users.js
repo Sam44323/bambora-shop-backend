@@ -2,9 +2,8 @@ const bcrypt = require("bcrypt");
 const { ObjectID } = require("mongodb");
 const jwt = require("jsonwebtoken");
 const { errorCreator } = require("../errorCreator/errorCreator");
-const stripe = require("stripe")(
-  "sk_test_51IXt1SSGnPbEznxsmliUKLckPLdc1zqgp0Fe85lo7PhPE0OrexgHccIhnXBC3cCHSZPqcx1HZ0SUoeDj1PspyvFa00pjEgMQac"
-);
+const { STRIPE_SESSION } = require("../constants");
+const stripe = require("stripe")(STRIPE_SESSION);
 
 const User = require("../models/users");
 const { validationResult } = require("express-validator");
