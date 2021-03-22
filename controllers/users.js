@@ -174,6 +174,20 @@ const removeFromCart = (req, res, next) => {
     });
 };
 
+const getOrders = (req, res, next) => {
+  User.findById(req.userId)
+    .select({ orders: 1, _id: 0 })
+    .then((orders) => {
+      if (orders.orders) {
+        res.status(200).json({ orders: orders.orders });
+      }
+    })
+    .catch((err) => {
+      console.log(err);
+      next(errorCreator("Please try after some time!"));
+    });
+};
+
 const placeOrder = (req, res, next) => {
   User.findById(req.userId)
     .populate({
@@ -199,20 +213,6 @@ const placeOrder = (req, res, next) => {
       res.status(200).json({ message: "Placed your order!" });
     })
     .catch(() => next(errorCreator("Can't place your order at this moment!")));
-};
-
-const getOrders = (req, res, next) => {
-  User.findById(req.userId)
-    .select({ orders: 1, _id: 0 })
-    .then((orders) => {
-      if (orders.orders) {
-        res.status(200).json({ orders: orders.orders });
-      }
-    })
-    .catch((err) => {
-      console.log(err);
-      next(errorCreator("Please try after some time!"));
-    });
 };
 
 module.exports = {
