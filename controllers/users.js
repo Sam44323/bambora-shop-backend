@@ -4,8 +4,13 @@ const jwt = require("jsonwebtoken");
 const { errorCreator } = require("../errorCreator/errorCreator");
 
 const User = require("../models/users");
+const { validationResult } = require("express-validator");
 
 const addUser = (req, res, next) => {
+  const errors = validationResult(req);
+  if (!errors.isEmpty()) {
+    return next(errorCreator(errors.errors[0].msg));
+  }
   bcrypt
     .hash(req.body.password, 12)
     .then((password) => {
@@ -43,6 +48,10 @@ const deleteUser = (req, res, next) => {
 };
 
 const loginUser = (req, res, next) => {
+  const errors = validationResult(req);
+  if (!errors.isEmpty()) {
+    return next(errorCreator(errors.errors[0].msg));
+  }
   let userData;
   User.findOne({ email: req.body.email })
     .then((user) => {
@@ -169,10 +178,11 @@ const getOrders = (req, res, next) => {
     .select({ orders: 1, _id: 0 })
     .then((orders) => {
       if (orders.orders) {
-        res.status(200).orders({ orders: orders.orders });
+        res.status(200).json({ orders: orders.orders });
       }
     })
     .catch((err) => {
+      console.log(err);
       next(errorCreator("Please try after some time!"));
     });
 };
