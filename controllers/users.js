@@ -122,7 +122,6 @@ const cartAction = (req, res, next) => {
 const incDcrCart = (req, res, next) => {
   User.findById(req.userId)
     .then((user) => {
-      console.log(req.query.type);
       user.cart = user.cart.map((item) => {
         if (req.query.type === "inc") {
           item.qty = item.qty + 1;
