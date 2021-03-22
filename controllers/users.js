@@ -119,6 +119,29 @@ const cartAction = (req, res, next) => {
     });
 };
 
+const incDcrCart = (req, res, next) => {
+  User.findById(req.userId)
+    .then((user) => {
+      console.log(req.query.type);
+      user.cart = user.cart.map((item) => {
+        if (req.query.type === "inc") {
+          item.qty = item.qty + 1;
+        } else {
+          item.qty = item.qty - 1;
+        }
+        return item;
+      });
+      user.cart = user.cart.filter((item) => item.qty !== 0);
+      return user.save();
+    })
+    .then(() => {
+      res.status(200).json({ message: "Updated the cart" });
+    })
+    .catch((err) => {
+      next(errorCreator("Please try again!"));
+    });
+};
+
 //method for removing an item from the cart
 
 const removeFromCart = (req, res, next) => {
@@ -138,7 +161,6 @@ const removeFromCart = (req, res, next) => {
       res.status(200).json({ message: "Removed from cart!" });
     })
     .catch((err) => {
-      console.log(err);
       next(errorCreator("Please try after some time!"));
     });
 };
@@ -167,6 +189,7 @@ module.exports = {
   loginUser,
   getCart,
   cartAction,
+  incDcrCart,
   removeFromCart,
   getOrders,
   placeOrder,

@@ -51,6 +51,9 @@ router.post(
   userControllers.removeFromCart
 );
 
+//INCREASE/DECRESASE THE CART ITEM QTY
+router.post("/incr-dcr/:id", checkAuthenticated, userControllers.incDcrCart);
+
 //GETTING THE USER
 router.get("/orders", checkAuthenticated, userControllers.getOrders);
 
