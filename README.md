@@ -18,15 +18,15 @@
 
 # Tech Stacks used!
 
-- ## Node.JS
-- ## Express.JS
-- ## MongoDB
-- ## Mongoose
-- ## Stripe
-- ## Express-validator
-- ## B-crypt
-- ## Jsonwebtoken
-- ## Body-parser
+- **Node.JS**
+- **Express.JS**
+- **MongoDB**
+- **Mongoose**
+- **Stripe**
+- **Express-validator**
+- **B-crypt**
+- **Jsonwebtoken**
+- **Body-parser**
 
 ---
 
